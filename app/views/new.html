@@ -4,7 +4,7 @@
   <div class="form">
     Title: <input type="text" ng-model="newPost.title"/><br>
     Content:<br>
-    <input type="text" ng-model="newPost.content" class="box"/>
+    <input type="text" class="content-box" ng-model="newPost.content"/>
     Tags: <span ng-repeat="tag in tags">
             <input type="checkbox" value="tag.id" ng-click="toggleId(tag.id)" class="checkbox">{{tag.name}}</input>
           </span>
