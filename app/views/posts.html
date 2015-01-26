@@ -3,16 +3,17 @@
   <div ui-view="new">
   </div>
   Search: <input type="text" ng-model="query" placeholder="words"/><br>
-  Search by title: <input type="text" ng-model="query.title" placeholder="title"/>
+  Search by title: <input type="text" ng-model="query.title" placeholder="title"/><br>
 
   <span ng-repeat="post in posts | filter:query:strict">
     <a ui-sref="show({id: post.id})">
       <h2>{{post.title}}</h2>
     </a>
-    <small ng-repeat="tag_id in post.tag_ids">{{getTagName(tag_id)}}</small><br>
+    <span ng-if="post.date">{{post.date | date:'EEEE'}}<br></span>
+    <span ng-if="post.tag_ids.length > 0">Tags:
+      <small ng-repeat="tag_id in post.tag_ids">{{getTagName(tag_id)}}</small><br>
+    </span>
     {{post.content}}
-    <br>
-    {{post.date | date:'EEEE'}}
     <hr>
   </span>
 </div>

@@ -1,4 +1,17 @@
 <div ng-controller="postController">
-  postname is {{postName}}
-  id is {{id}}
+  <h2>{{post.title}}</h2>
+  <small ng-if="post.tags.length > 0">
+    Tags:
+    <span ng-repeat="tag in post.tags">
+      {{tag.name}}
+    </span>
+  </small><br>
+  {{post.date}}<br>
+  {{post.content}} <br>
+
+  <div ng-controller="postsController">
+    <a ui-sref="posts" ng-click="deletePost(post.id)">
+      Delete this post
+    </a>
+  </div>
 </div>

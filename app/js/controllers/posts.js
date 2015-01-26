@@ -25,6 +25,18 @@ postsControllerModule.controller('postsController',
         .success(function(data, status, header, config) {
           $scope.tags = data
         });
+    $scope.deletePost = function(id) {
+      apiService.delete("posts/" + id);
+      //still working on making freshly deleted posts disappear without refresh
+      for (i = 0; i < $scope.posts.length; i++){
+        if ($scope.posts[i].id === id) {
+          console.log($scope.posts);
+          $scope.posts.splice(i, 1);
+          console.log("after:");
+          console.log($scope.posts);
+        };
+      };
+    };
 
 }]);
 
@@ -32,18 +44,23 @@ postsControllerModule.controller('newPostController',
   ['$scope', '$http', 'apiService', function($scope, $http, apiService){
     $scope.aName = "new controller, yay!";
 
-    $scope.submitNewPost = function() {
-      var postToPush = {};
-      postToPush.title = $scope.newPost.title;
-      postToPush.content = $scope.newPost.content;
-      postToPush.tag_ids = $scope.newPost.tag_ids;
-      $scope.posts.push(postToPush);
-      EXPERIMENT
-      apiService.postPost("posts", $scope.newPost);
-      $scope.newPost = {title: '', content: '', tag_ids: []};
+    var uncheckBoxes = function(){
+      var boxes = document.getElementsByClassName("checkbox");
+      for (i = 0; i < boxes.length; i++) {
+        boxes[i].checked = false
+      };
     };
 
-    $scope.newPost = {tag_ids: []};
+    $scope.submitNewPost = function() {
+      $scope.newPost.date = new Date()
+      $scope.posts.push($scope.newPost);
+      apiService.postPost("posts", $scope.newPost);
+      console.log($scope.newPost)
+      uncheckBoxes()
+      $scope.newPost = {title: '', content: '', tag_ids: [], date: null};
+    };
+
+    $scope.newPost = {tag_ids: [], date: new Date()};
 
     $scope.toggleId = function(id) {
       var i = $scope.newPost.tag_ids.indexOf(id);
@@ -58,7 +75,11 @@ postsControllerModule.controller('newPostController',
 }]);
 
 postsControllerModule.controller('postController',
-  ['$scope', '$http', '$stateParams', function($scope, $http, $stateParams) {
-    $scope.postName = "This is the post view";
+  ['$scope', '$http', '$stateParams', 'apiService', function($scope, $http, $stateParams, apiService) {
     $scope.id = $stateParams.id;
+    $scope.post = apiService.get("posts/" + $scope.id)
+      .success(function(data, status, header, config){
+        $scope.post = data
+      });
+
 }]);
